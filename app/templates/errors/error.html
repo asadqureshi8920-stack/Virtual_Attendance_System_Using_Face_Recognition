@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="error-page panel">
+    <div class="error-code">{{ code }}</div>
+    <div>
+        <p class="eyebrow">Request Status</p>
+        <h2>{{ title }}</h2>
+        <p class="muted">{{ message }}</p>
+        <div class="form-actions">
+            <a class="button" href="{{ url_for('dashboard.index') if g.user else url_for('auth.login') }}">Go to Dashboard</a>
+            <a class="button button-secondary" href="{{ url_for('public.attendance') }}">Student Attendance</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.env/
+
+# Flask
+instance/
+uploads/
+rendered_pages/
+
+# Logs
+*.log
+
+# Database
+*.db
+*.db-journal
+*.sqlite3
+
+# Face Recognition Project (IMPORTANT)
+app_data/
+dataset/
+captures/
+models/
+trainer/
+
+# Model files
+*.yml
+
+# Temp / Misc
+temp-root.db
+*.journal
+
+# Testing
+.pytest_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Sessions | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Session Management</p>
+        <h2>Session Scheduling</h2>
+        <p class="muted">Create class sessions, start recognition, and monitor face-recognition attendance results.</p>
+    </div>
+    <a class="button" href="{{ url_for('sessions.create') }}">Create Session</a>
+</section>
+
+<section class="panel">
+    {% if sessions %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Session</th>
+                    <th>Class</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session_row in sessions %}
+                <tr>
+                    <td>{{ session_row.session_id }}</td>
+                    <td>{{ session_row.classroom.label }}</td>
+                    <td>{{ session_row.session_date }}</td>
+                    <td>{{ session_row.display_time }}</td>
+                    <td><span class="status-chip status-{{ session_row.status|lower }}">{{ session_row.status }}</span></td>
+                    <td>
+                        <div class="form-actions">
+                            <a class="button button-small button-secondary" href="{{ url_for('sessions.start', session_id=session_row.session_id) }}">Start Recognition</a>
+                            <a class="button button-small button-secondary" href="{{ url_for('sessions.recognize', session_id=session_row.session_id) }}">View Attendance</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">No sessions created yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Dashboard</p>
+        <h2>Command Center</h2>
+        <p class="muted">Manage student records, training, session startup, recognition, and reporting from one control panel.</p>
+    </div>
+    {% if g.user.role in ["Admin", "Teacher"] %}
+    <div class="header-actions">
+        <a class="button" href="{{ url_for('sessions.create') }}">Create Session</a>
+        <a class="button button-secondary" href="{{ url_for('students.create') }}">Add Student</a>
+    </div>
+    {% endif %}
+</section>
+
+<section class="panel dashboard-hero">
+    <div>
+        <p class="eyebrow">Recognition Pipeline</p>
+        <h3>Face attendance is automatic, protected, and report-ready.</h3>
+        <p class="muted">Students enter their enrollment number, the browser captures webcam samples, OpenCV verifies the face, and attendance is stored against the active class session.</p>
+    </div>
+    <div class="recognition-steps compact-steps">
+        <span>Detect</span>
+        <span>Verify</span>
+        <span>Mark</span>
+        <span>Report</span>
+    </div>
+</section>
+
+<section class="metric-grid">
+    <article class="metric-card metric-students">
+        <span>Students</span>
+        <strong>{{ metrics.students }}</strong>
+    </article>
+    <article class="metric-card metric-teachers">
+        <span>Teachers</span>
+        <strong>{{ metrics.teachers }}</strong>
+    </article>
+    <article class="metric-card metric-classes">
+        <span>Classes</span>
+        <strong>{{ metrics.classes }}</strong>
+    </article>
+    <article class="metric-card metric-sessions">
+        <span>Sessions</span>
+        <strong>{{ metrics.sessions }}</strong>
+    </article>
+    <article class="metric-card metric-attendance">
+        <span>Attendance Records</span>
+        <strong>{{ metrics.attendance }}</strong>
+    </article>
+</section>
+
+{% if teacher_summary %}
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Teacher View</p>
+            <h3>{{ teacher_summary.teacher.name }}</h3>
+        </div>
+    </div>
+    <div class="tag-row">
+        {% for class_row in teacher_summary.classes %}
+        <span class="status-chip">{{ class_row.label }}</span>
+        {% else %}
+        <span class="muted">No classes assigned yet.</span>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if student_summary %}
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Student View</p>
+            <h3>{{ student_summary.student.name }}</h3>
+        </div>
+    </div>
+    <p class="muted">Recent attendance records for the logged-in student account.</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Session</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Confidence %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in student_summary.records %}
+                <tr>
+                    <td>{{ record.session_id }}</td>
+                    <td>{{ record.attendance_date }}</td>
+                    <td><span class="status-chip status-{{ record.status|lower }}">{{ record.status }}</span></td>
+                    <td>{{ "%.2f"|format(record.confidence_score) }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No attendance records found yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endif %}
+
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Recent Sessions</p>
+            <h3>Latest Sessions</h3>
+        </div>
+    </div>
+
+    {% if recent_sessions %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Session</th>
+                    <th>Class</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session_row in recent_sessions %}
+                <tr>
+                    <td>{{ session_row.session_id }}</td>
+                    <td>{{ session_row.classroom.label }}</td>
+                    <td>{{ session_row.session_date }}</td>
+                    <td>{{ session_row.display_time }}</td>
+                    <td><span class="status-chip status-{{ session_row.status|lower }}">{{ session_row.status }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">No sessions scheduled yet. Create a class session to begin recognition and attendance.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Capture Face | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Face Dataset Capture</p>
+        <h2>Capture Face for {{ student.name }}</h2>
+        <p class="muted">Use the webcam to capture multiple face samples and refresh the recognizer model automatically.</p>
+    </div>
+</section>
+
+<section class="panel">
+    <form method="post" class="form-grid camera-form" data-camera-form>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="camera_image_samples" id="camera_image_samples">
+        <div class="camera-layout">
+            <div class="camera-frame">
+                <span class="scan-line"></span>
+            <video id="camera-video" class="camera-video" autoplay playsinline muted></video>
+            <img id="camera-preview" class="camera-preview hidden" alt="Captured face preview">
+            </div>
+            <canvas id="camera-canvas" class="hidden"></canvas>
+        </div>
+        <div class="metric-grid compact">
+            <article class="metric-card">
+                <span>Student ID</span>
+                <strong>{{ student.student_id }}</strong>
+            </article>
+            <article class="metric-card">
+                <span>Enrollment</span>
+                <strong>{{ student.enrollment_no }}</strong>
+            </article>
+            <article class="metric-card">
+                <span>Existing Samples</span>
+                <strong>{{ student.face_samples_count }}</strong>
+            </article>
+        </div>
+        <p id="camera-status" class="helper-text">Allow camera access, then capture a burst of samples for this student.</p>
+        <div class="form-actions">
+            <button type="button" class="button button-secondary" data-camera-start>Start Camera</button>
+            <button type="button" class="button button-secondary" data-camera-capture>Capture Face</button>
+            <button type="button" class="button button-secondary" data-camera-retake>Retake</button>
+            <button type="submit" class="button">Save Dataset</button>
+            <a class="button button-secondary" href="{{ url_for('students.index') }}">Back</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/camera.js', v=asset_version) }}"></script>
+{% endblock %}

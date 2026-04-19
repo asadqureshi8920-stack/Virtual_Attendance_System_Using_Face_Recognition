@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Login Accounts | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Credential Management</p>
+        <h2>Login Accounts</h2>
+        <p class="muted">Update login IDs and passwords for Admin, Teacher, and Student accounts.</p>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>Full Name</th>
+                    <th>Login ID</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td><span class="status-chip">{{ user.role }}</span></td>
+                    <td>{{ user.full_name }}</td>
+                    <td>{{ user.login_id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td><span class="status-chip status-{{ user.status|lower }}">{{ user.status }}</span></td>
+                    <td>{{ user.last_login.strftime("%Y-%m-%d %H:%M") if user.last_login else "Never" }}</td>
+                    <td>
+                        <a class="button button-small button-secondary" href="{{ url_for('accounts.edit', login_id=user.login_id) }}">Update Login</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7">No user accounts found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

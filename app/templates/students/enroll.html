@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Enroll Face | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Face Registration</p>
+        <h2>Enroll Face For {{ student.name }}</h2>
+        <p class="muted">Use the student's computer camera to capture one clear front-facing image for recognition.</p>
+    </div>
+</section>
+
+<section class="panel">
+    <form method="post" class="form-grid camera-form" data-camera-form>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="camera_image_samples" id="camera_image_samples">
+        <div class="camera-layout">
+            <div class="camera-frame">
+                <span class="scan-line"></span>
+            <video id="camera-video" class="camera-video" autoplay playsinline muted></video>
+            <img id="camera-preview" class="camera-preview hidden" alt="Captured student face preview">
+            </div>
+            <canvas id="camera-canvas" class="hidden"></canvas>
+        </div>
+        <p id="camera-status" class="helper-text">Allow camera access, then capture a short burst of face samples. The system keeps multiple samples so one face cannot be registered again under another student.</p>
+        <div class="form-actions">
+            <button type="button" class="button button-secondary" data-camera-start>Start Camera</button>
+            <button type="button" class="button button-secondary" data-camera-capture>Capture Samples</button>
+            <button type="button" class="button button-secondary" data-camera-retake>Retake</button>
+            <button type="submit" class="button">Enroll Face</button>
+            <a class="button button-secondary" href="{{ url_for('students.index') }}">Back To Students</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/camera.js', v=asset_version) }}"></script>
+{% endblock %}

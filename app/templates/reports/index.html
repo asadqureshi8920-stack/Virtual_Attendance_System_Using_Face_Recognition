@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Reports | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Attendance Reports</p>
+        <h2>Attendance Reports</h2>
+        <p class="muted">View daily, weekly, and monthly attendance data and export reports to CSV or Excel.</p>
+    </div>
+    <form method="get" class="form-grid filter-grid">
+        <label>
+            <span>Period</span>
+            <select name="period">
+                <option value="daily" {% if period == "daily" %}selected{% endif %}>Daily</option>
+                <option value="weekly" {% if period == "weekly" %}selected{% endif %}>Weekly</option>
+                <option value="monthly" {% if period == "monthly" %}selected{% endif %}>Monthly</option>
+            </select>
+        </label>
+        <label>
+            <span>Reference Date</span>
+            <input type="date" name="date" value="{{ anchor_date.isoformat() }}">
+        </label>
+        <div class="form-actions">
+            <button type="submit" class="button">Apply</button>
+            <a class="button button-secondary" href="{{ url_for('reports.export_csv', period=period, date=anchor_date.isoformat()) }}">Export CSV</a>
+            <a class="button button-secondary" href="{{ url_for('reports.export_excel', period=period, date=anchor_date.isoformat()) }}">Export Excel</a>
+        </div>
+    </form>
+</section>
+
+<section class="metric-grid compact">
+    <article class="metric-card metric-present">
+        <span>Present</span>
+        <strong>{{ summary.present }}</strong>
+    </article>
+    <article class="metric-card metric-absent">
+        <span>Absent</span>
+        <strong>{{ summary.absent }}</strong>
+    </article>
+    <article class="metric-card metric-unknown">
+        <span>Unknown</span>
+        <strong>{{ summary.unknown }}</strong>
+    </article>
+    <article class="metric-card metric-sessions">
+        <span>Sessions</span>
+        <strong>{{ summary.sessions }}</strong>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Report Window</p>
+            <h3>{{ date_range[0] }} to {{ date_range[1] }}</h3>
+        </div>
+    </div>
+    <p class="muted">Attendance records generated through face recognition only. Duplicate attendance is blocked per session.</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Attendance ID</th>
+                    <th>Session ID</th>
+                    <th>Class</th>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Enrollment No</th>
+                    <th>Status</th>
+                    <th>Confidence %</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in records %}
+                <tr>
+                    <td>{{ row["Attendance ID"] }}</td>
+                    <td>{{ row["Session ID"] }}</td>
+                    <td>{{ row["Class Name"] }}</td>
+                    <td>{{ row["Student ID"] }}</td>
+                    <td>{{ row["Name"] }}</td>
+                    <td>{{ row["Date"] }}</td>
+                    <td>{{ row["Time"] }}</td>
+                    <td>{{ row["Enrollment No"] }}</td>
+                    <td><span class="status-chip status-{{ row['Status']|lower }}">{{ row["Status"] }}</span></td>
+                    <td>{{ "%.2f"|format(row["Confidence %"]) }}</td>
+                    <td>{{ row["Remarks"] }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="11">No attendance records found for this period.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Add Teacher | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Faculty Setup</p>
+        <h2>Add Teacher</h2>
+    </div>
+</section>
+
+<section class="panel">
+    <form method="post" class="form-grid two-column">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label><span>Name</span><input type="text" name="name" required></label>
+        <label><span>Email</span><input type="email" name="email" required></label>
+        <label><span>Phone</span><input type="text" name="phone" required></label>
+        <label><span>Department</span><input type="text" name="department" required></label>
+        <label><span>Qualification</span><input type="text" name="qualification" required></label>
+        <label><span>Designation</span><input type="text" name="designation" value="Lecturer" required></label>
+        <label><span>Date of Joining</span><input type="date" name="date_of_joining" required></label>
+        <label>
+            <span>Status</span>
+            <select name="status">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        </label>
+        <label><span>Teacher Login ID</span><input type="text" name="login_id" placeholder="teacher2"></label>
+        <label><span>Teacher Password</span><input type="text" name="password" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}" title="{{ password_policy_text }}" placeholder="Teacher@123"></label>
+        <label><span>Account Email</span><input type="email" name="account_email" placeholder="teacher2@virtualclassroom.local"></label>
+        <p class="helper-text">{{ password_policy_text }}</p>
+        <div class="form-actions">
+            <button type="submit" class="button">Save Teacher</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

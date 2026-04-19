@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule Session | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Session Setup</p>
+        <h2>Schedule Class Session</h2>
+    </div>
+</section>
+
+<section class="panel">
+    <form method="post" class="form-grid two-column">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label><span>Session ID</span><input type="text" name="session_id" placeholder="SES003"></label>
+        <label>
+            <span>Class</span>
+            <select name="class_id" required>
+                {% for class_row in classes %}
+                <option value="{{ class_row.class_id }}">{{ class_row.label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label><span>Session Date</span><input type="date" name="session_date" required></label>
+        <label><span>Session Time</span><input type="time" name="session_time" required></label>
+        <label><span>End Time</span><input type="time" name="end_time"></label>
+        <label><span>Meeting Link</span><input type="url" name="meeting_link" placeholder="https://meet.example.com/classroom"></label>
+        <label>
+            <span>Status</span>
+            <select name="status">
+                <option value="Scheduled">Scheduled</option>
+                <option value="Ongoing">Ongoing</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </label>
+        <div class="form-actions">
+            <button type="submit" class="button">Save Session</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

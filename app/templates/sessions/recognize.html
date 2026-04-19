@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Recognize Faces | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Session Monitor</p>
+        <h2>{{ session_record.session_id }} For {{ session_record.classroom.label }}</h2>
+        <p class="muted">This page shows the active session roster, attendance status, and the recognition portal link.</p>
+    </div>
+    <div class="header-actions">
+        <a class="button" href="{{ url_for('public.attendance', session_id=session_record.session_id) }}">Open Public Attendance</a>
+        <a class="button button-secondary" href="{{ url_for('sessions.index') }}">Back To Sessions</a>
+    </div>
+</section>
+
+<section class="metric-grid compact">
+    <article class="metric-card metric-students">
+        <span>Students In Class</span>
+        <strong>{{ students|length }}</strong>
+    </article>
+    <article class="metric-card metric-present">
+        <span>Face Enrolled</span>
+        <strong>{{ enrolled_count }}</strong>
+    </article>
+    <article class="metric-card metric-unknown">
+        <span>Pending Enrollment</span>
+        <strong>{{ students|length - enrolled_count }}</strong>
+    </article>
+    <article class="metric-card metric-present">
+        <span>Present</span>
+        <strong>{{ metrics.present }}</strong>
+    </article>
+    <article class="metric-card metric-absent">
+        <span>Absent</span>
+        <strong>{{ metrics.absent }}</strong>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Recognition Portal</p>
+            <h3>Student Attendance Link</h3>
+        </div>
+    </div>
+    <p class="helper-text">Students enter their enrollment number, the webcam detects the face in real time, and the system marks attendance automatically when the face matches.</p>
+    <div class="form-actions">
+        <a class="button" href="{{ url_for('public.attendance', session_id=session_record.session_id) }}">Start Attendance</a>
+        <a class="button button-secondary" href="{{ url_for('students.train_model') }}">Train Model</a>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Class Roster</p>
+            <h3>Dataset Status</h3>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Enrollment No</th>
+                    <th>Face Samples</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.enrollment_no }}</td>
+                    <td>{{ student.face_samples_count }}</td>
+                    <td><a class="button button-small button-secondary" href="{{ url_for('students.capture', student_id=student.student_id) }}">Capture Face</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Latest Result</p>
+            <h3>Attendance Records For This Session</h3>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Status</th>
+                    <th>Confidence %</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_records %}
+                <tr>
+                    <td>{{ record.student_name }}</td>
+                    <td><span class="status-chip status-{{ record.status|lower }}">{{ record.status }}</span></td>
+                    <td>{{ "%.2f"|format(record.confidence_score) }}</td>
+                    <td>{{ record.remarks }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No attendance records yet for this session.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

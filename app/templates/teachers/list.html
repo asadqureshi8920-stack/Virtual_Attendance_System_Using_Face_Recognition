@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Teachers | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Teacher Management</p>
+        <h2>Teacher Management</h2>
+        <p class="muted">Create teacher profiles and linked teacher logins for class and session management.</p>
+    </div>
+    <a class="button" href="{{ url_for('teachers.create') }}">Add Teacher</a>
+</section>
+
+<section class="panel">
+    {% if teachers %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                <tr>
+                    <td>{{ teacher.teacher_id }}</td>
+                    <td>{{ teacher.name }}</td>
+                    <td>{{ teacher.department }}</td>
+                    <td>{{ teacher.designation }}</td>
+                    <td>{{ teacher.email }}</td>
+                    <td>{{ teacher.phone }}</td>
+                    <td>{{ teacher.date_of_joining }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">No teachers added yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

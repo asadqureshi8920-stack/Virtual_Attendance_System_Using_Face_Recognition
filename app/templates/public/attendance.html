@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Attendance Portal</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=asset_version) }}">
+</head>
+<body class="login-body">
+    <main class="login-layout student-portal-layout">
+        <section class="hero-card">
+            <p class="hero-kicker">Student Attendance Portal</p>
+            <h1>Look at the camera. Attendance marks itself.</h1>
+            <p>
+                Enter the enrollment number and keep your face centered. The system captures
+                multiple frames, verifies the face, marks attendance, and blocks duplicate
+                entries for the same class session.
+            </p>
+            <div class="recognition-steps">
+                <span>1. Enter Enrollment</span>
+                <span>2. Face Detection</span>
+                <span>3. AI Verification</span>
+                <span>4. Attendance Saved</span>
+            </div>
+            <ul class="hero-list">
+                <li>No student login is required</li>
+                <li>No capture or retake buttons are needed</li>
+                <li>Unknown faces are rejected automatically</li>
+            </ul>
+            <a class="button button-secondary" href="{{ url_for('auth.login') }}">Admin Login</a>
+        </section>
+
+        <section class="panel auth-panel portal-shell">
+            <p class="eyebrow">Attendance Portal</p>
+            <h2>Enter Enrollment Number</h2>
+            <p class="muted">The camera starts automatically. Recognition preview and final attendance submission happen on their own.</p>
+
+            <form method="post" class="form-grid auto-attendance-form" data-auto-attendance-form data-session-id="{{ requested_session_id or '' }}">
+                <label>
+                    <span>Enrollment Number</span>
+                    <input type="text" name="enrollment_no" id="enrollment_no" placeholder="ENR-2026-001" autocomplete="off" required>
+                </label>
+
+                <div class="camera-layout">
+                    <div class="camera-frame">
+                        <span class="scan-line"></span>
+                    <video id="camera-video" class="camera-video" autoplay playsinline muted></video>
+                    <img id="camera-preview" class="camera-preview hidden" alt="Automatic attendance preview">
+                    </div>
+                    <canvas id="camera-canvas" class="hidden"></canvas>
+                </div>
+
+                <p id="camera-status" class="helper-text">Allow camera access. Then type the enrollment number and look at the camera.</p>
+            </form>
+
+            <section class="panel inline-panel">
+                <p class="eyebrow">Live Recognition</p>
+                <div class="live-grid">
+                    <div>
+                        <span class="muted">Detected Name</span>
+                        <h3 id="live-label">Unknown</h3>
+                    </div>
+                    <div>
+                        <span class="muted">Confidence</span>
+                        <h3 id="live-confidence">0.00%</h3>
+                    </div>
+                </div>
+                <p class="muted" id="live-session">Waiting for enrollment number.</p>
+                <p id="live-message">The system will recognize, enroll if required, and mark attendance automatically.</p>
+                <div class="confidence-track">
+                    <span></span>
+                </div>
+            </section>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='js/auto_attendance.js', v=asset_version) }}"></script>
+</body>
+</html>

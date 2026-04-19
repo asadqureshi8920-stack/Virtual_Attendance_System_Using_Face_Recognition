@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login | Virtual Classroom Attendance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=asset_version) }}">
+</head>
+<body class="login-body">
+    <main class="login-layout">
+        <section class="hero-card">
+            <p class="hero-kicker">Virtual Classroom Attendance System</p>
+            <h1>Professional face-recognition attendance suite</h1>
+            <p>
+                Manage students, train the OpenCV recognizer, start live classroom sessions,
+                and export attendance reports from one polished Flask application.
+            </p>
+            <div class="feature-strip">
+                <span>Webcam Recognition</span>
+                <span>Duplicate Blocking</span>
+                <span>CSV + Excel Reports</span>
+            </div>
+            <ul class="hero-list">
+                <li>Secure login with role-based dashboard access</li>
+                <li>Public attendance portal with webcam recognition by enrollment number</li>
+                <li>Daily, weekly, and monthly attendance export to CSV and Excel</li>
+            </ul>
+            <div class="hero-actions">
+                <a class="button button-secondary" href="{{ url_for('public.attendance') }}">Open Student Attendance</a>
+            </div>
+        </section>
+
+        <section class="panel auth-panel">
+            <p class="eyebrow">Secure Access</p>
+            <h2>Sign in</h2>
+            <p class="muted">Use role credentials to open the dashboard. Students can also use the public attendance page without logging in.</p>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <section class="flash-stack">
+                        {% for category, message in messages %}
+                            <div class="flash flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </section>
+                {% endif %}
+            {% endwith %}
+            <form method="post" class="form-grid">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label>
+                    <span>Login ID</span>
+                    <input type="text" name="login_id" placeholder="admin" required>
+                </label>
+                <label>
+                    <span>Password</span>
+                    <input type="password" name="password" placeholder="Enter password" required>
+                </label>
+                <p class="helper-text password-format-note">{{ password_policy_text }}</p>
+                <button type="submit" class="button">Login</button>
+            </form>
+            <div class="login-hints">
+                <p class="muted">Need to update a teacher or student login?</p>
+                <a class="button button-secondary" href="{{ url_for('auth.change_credentials') }}">Change Username/Password</a>
+                <a class="button button-secondary" href="{{ url_for('auth.forgot_password') }}">Forgot Password</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

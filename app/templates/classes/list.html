@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Classes | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Class Management</p>
+        <h2>Class Management</h2>
+        <p class="muted">Create academic classes linked to teachers, department, course, year, semester, and division.</p>
+    </div>
+    <a class="button" href="{{ url_for('classes.create') }}">Add Class</a>
+</section>
+
+<section class="panel">
+    {% if classes %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Class</th>
+                    <th>Course</th>
+                    <th>Year</th>
+                    <th>Semester</th>
+                    <th>Division</th>
+                    <th>Teacher</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for class_row in classes %}
+                <tr>
+                    <td>{{ class_row.class_id }}</td>
+                    <td>{{ class_row.class_name }}</td>
+                    <td>{{ class_row.course }}</td>
+                    <td>{{ class_row.year }}</td>
+                    <td>{{ class_row.semester }}</td>
+                    <td>{{ class_row.division }}</td>
+                    <td>{{ class_row.teacher.name if class_row.teacher else "Unassigned" }}</td>
+                    <td><span class="status-chip status-{{ class_row.status|lower }}">{{ class_row.status }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">No classes created yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

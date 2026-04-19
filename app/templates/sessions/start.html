@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Start Session | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Start Attendance</p>
+        <h2>{{ session_record.session_id }} - {{ session_record.classroom.label }}</h2>
+        <p class="muted">Start recognition for this session and share the public attendance portal with students.</p>
+    </div>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="button">Start Recognition</button>
+    </form>
+</section>
+
+<section class="metric-grid compact">
+    <article class="metric-card">
+        <span>Session Date</span>
+        <strong>{{ session_record.session_date }}</strong>
+    </article>
+    <article class="metric-card">
+        <span>Session Time</span>
+        <strong>{{ session_record.display_time }}</strong>
+    </article>
+    <article class="metric-card">
+        <span>Status</span>
+        <strong>{{ session_record.status }}</strong>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Attendance Flow</p>
+            <h3>Recognition Portal</h3>
+        </div>
+    </div>
+    <p class="muted">Students should open the public attendance page, enter their enrollment number, and allow webcam access. The system will detect, recognize, and mark attendance automatically.</p>
+    <div class="form-actions">
+        <a class="button" href="{{ url_for('public.attendance', session_id=session_record.session_id) }}">Open Public Attendance</a>
+        <a class="button button-secondary" href="{{ url_for('sessions.recognize', session_id=session_record.session_id) }}">View Attendance</a>
+    </div>
+</section>
+{% endblock %}

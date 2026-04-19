@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Update Login | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Update Login</p>
+        <h2>{{ user.full_name }}</h2>
+        <p class="muted">Change the login ID or set a new password for this {{ user.role }} account.</p>
+    </div>
+    <a class="button button-secondary" href="{{ url_for('accounts.index') }}">Back To Accounts</a>
+</section>
+
+<section class="panel">
+    <form method="post" class="form-grid two-column">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>
+            <span>Role</span>
+            <input type="text" value="{{ user.role }}" disabled>
+        </label>
+        <label>
+            <span>Full Name</span>
+            <input type="text" value="{{ user.full_name }}" disabled>
+        </label>
+        <label>
+            <span>Login ID</span>
+            <input type="text" name="login_id" value="{{ user.login_id }}" maxlength="50" required>
+        </label>
+        <label>
+            <span>New Password</span>
+            <input type="password" name="password" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}" title="{{ password_policy_text }}" placeholder="Leave blank to keep current password">
+        </label>
+        <label>
+            <span>Confirm New Password</span>
+            <input type="password" name="confirm_password" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}" title="{{ password_policy_text }}" placeholder="Repeat new password">
+        </label>
+        <div class="credential-note">
+            <p class="eyebrow">Security Note</p>
+            <p class="muted">Passwords are stored securely as hashes. The current password is never displayed.</p>
+            <p class="muted">{{ password_policy_text }}</p>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="button">Update Login</button>
+            <a class="button button-secondary" href="{{ url_for('accounts.index') }}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

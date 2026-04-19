@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Train Model | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">OpenCV Trainer</p>
+        <h2>Train Face Recognition Model</h2>
+        <p class="muted">Refresh the LBPH, Eigen, and Fisher model files from student dataset images.</p>
+    </div>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="button">Train Model</button>
+    </form>
+</section>
+
+<section class="panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Enrollment</th>
+                    <th>Samples</th>
+                    <th>Dataset Ready</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.enrollment_no }}</td>
+                    <td>{{ student.face_samples_count }}</td>
+                    <td>
+                        {% if student.face_samples_count > 0 %}
+                        <span class="status-chip status-active">Ready</span>
+                        {% else %}
+                        <span class="status-chip status-scheduled">Pending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No students found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Virtual Classroom Attendance System{% endblock %}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=asset_version) }}">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-mark">VAF</span>
+                <div>
+                    <span class="brand-kicker">Flask + OpenCV AI</span>
+                    <h1>Virtual Attendance</h1>
+                    <p>Face-recognition attendance for virtual classrooms, with secure records and board-ready reporting.</p>
+                </div>
+            </div>
+
+            {% if g.user %}
+            <nav class="nav">
+                <a class="{{ 'active' if request.endpoint and request.endpoint.startswith('dashboard.') else '' }}" href="{{ url_for('dashboard.index') }}">Dashboard</a>
+                {% if g.user.role == "Admin" %}
+                <a class="{{ 'active' if request.endpoint and request.endpoint.startswith('teachers.') else '' }}" href="{{ url_for('teachers.index') }}">Teachers</a>
+                <a class="{{ 'active' if request.endpoint and request.endpoint.startswith('accounts.') else '' }}" href="{{ url_for('accounts.index') }}">Login Accounts</a>
+                {% endif %}
+                {% if g.user.role in ["Admin", "Teacher"] %}
+                <a class="{{ 'active' if request.endpoint and request.endpoint.startswith('classes.') else '' }}" href="{{ url_for('classes.index') }}">Classes</a>
+                <a class="{{ 'active' if request.endpoint and request.endpoint.startswith('students.') and request.endpoint != 'students.train_model' else '' }}" href="{{ url_for('students.index') }}">Students</a>
+                <a class="{{ 'active' if request.endpoint == 'students.train_model' else '' }}" href="{{ url_for('students.train_model') }}">Train Model</a>
+                <a class="{{ 'active' if request.endpoint and request.endpoint.startswith('sessions.') else '' }}" href="{{ url_for('sessions.index') }}">Sessions</a>
+                <a class="{{ 'active' if request.endpoint and request.endpoint.startswith('reports.') else '' }}" href="{{ url_for('reports.index') }}">Reports</a>
+                {% endif %}
+                <a class="{{ 'active' if request.endpoint == 'public.attendance' else '' }}" href="{{ url_for('public.attendance') }}">Student Attendance</a>
+            </nav>
+
+            <form method="post" action="{{ url_for('auth.logout') }}" class="logout-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="button button-secondary">Log Out</button>
+            </form>
+            {% else %}
+            <nav class="nav">
+                <a class="{{ 'active' if request.endpoint == 'auth.login' else '' }}" href="{{ url_for('auth.login') }}">Login</a>
+                <a class="{{ 'active' if request.endpoint == 'public.attendance' else '' }}" href="{{ url_for('public.attendance') }}">Student Attendance</a>
+            </nav>
+            {% endif %}
+
+            <div class="sidebar-footer">
+                <span>Recognition Engine</span>
+                <strong>OpenCV Ensemble</strong>
+                <small>LBPH + quality scoring + multi-frame consensus</small>
+            </div>
+        </aside>
+
+        <main class="content" id="main-content">
+            {% if g.user %}
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">Signed in</p>
+                    <h2>{{ g.user.full_name }}</h2>
+                    <p class="muted">{{ g.user.login_id }}</p>
+                </div>
+                <div class="topbar-actions">
+                    <a class="status-chip status-role" href="{{ url_for('public.attendance') }}">Student Portal</a>
+                    <div class="status-chip">{{ g.user.role }}</div>
+                </div>
+            </header>
+            {% endif %}
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <section class="flash-stack">
+                        {% for category, message in messages %}
+                            <div class="flash flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </section>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

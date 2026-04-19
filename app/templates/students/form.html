@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Register Student | Virtual Classroom Attendance{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Enrollment Setup</p>
+        <h2>Register Student</h2>
+    </div>
+</section>
+
+<section class="panel">
+    <form method="post" class="form-grid two-column">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label><span>Student ID</span><input type="text" name="student_id" placeholder="STD004"></label>
+        <label><span>Enrollment Number</span><input type="text" name="enrollment_no" required></label>
+        <label><span>Name</span><input type="text" name="name" required></label>
+        <label><span>Department</span><input type="text" name="department" required></label>
+        <label><span>Course</span><input type="text" name="course" required></label>
+        <label><span>Year</span><input type="number" name="year" min="1" required></label>
+        <label><span>Semester</span><input type="number" name="semester" min="1" required></label>
+        <label><span>Division</span><input type="text" name="division" required></label>
+        <label><span>Roll No</span><input type="text" name="roll_no" required></label>
+        <label>
+            <span>Gender</span>
+            <select name="gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </label>
+        <label><span>Date of Birth</span><input type="date" name="dob" required></label>
+        <label><span>Email</span><input type="email" name="email" required></label>
+        <label><span>Phone</span><input type="text" name="phone" required></label>
+        <label><span>Address</span><input type="text" name="address" required></label>
+        <label><span>Teacher Name</span><input type="text" name="teacher_name" placeholder="Dr. Sana Rahman"></label>
+        <label>
+            <span>Class</span>
+            <select name="class_id" required>
+                {% for class_row in classes %}
+                <option value="{{ class_row.class_id }}">{{ class_row.label }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label><span>Date of Enrollment</span><input type="date" name="date_of_enrollment" required></label>
+        <label>
+            <span>Status</span>
+            <select name="status">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Suspended">Suspended</option>
+            </select>
+        </label>
+        <label><span>Student Login ID</span><input type="text" name="login_id" placeholder="std004"></label>
+        <label><span>Student Password</span><input type="text" name="password" minlength="8" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}" title="{{ password_policy_text }}" placeholder="Student@123"></label>
+        <label><span>Account Email</span><input type="email" name="account_email" placeholder="std004@virtualclassroom.local"></label>
+        <p class="helper-text">{{ password_policy_text }}</p>
+        <p class="helper-text">After saving the student, open Capture Face to store multiple face samples in the dataset folder.</p>
+        <div class="form-actions">
+            <button type="submit" class="button">Save Student</button>
+        </div>
+    </form>
+</section>
+{% endblock %}
